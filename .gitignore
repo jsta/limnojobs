@@ -1,2 +1,6 @@
 config.py
 credentials.json
+__pycache__/
+.envrc
+.vscode/
+*.egg-info
