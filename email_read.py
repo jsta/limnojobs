@@ -1,8 +1,8 @@
 # https://www.geeksforgeeks.org/python-fetch-your-gmail-emails-from-a-particular-user/
 
 import email
-from email.generator import Generator
 import imaplib
+import re
 # import base64
 # import html2text
 # import mailparser
