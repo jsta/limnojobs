@@ -1,5 +1,10 @@
-import pandas as pd
-import pkg_resources
+from ecolog import pull_ecolog
 
-keywords = pd.read_csv(pkg_resources.resource_filename('limnojobs',
-                                                           'keywords.csv'))
+# def limnojobs(tweet, interactive):
+tweet = False
+interactive = True
+
+# jobs_ecolog = pull_ecolog()
+
+
+# res.to_csv(subject_tag + ".csv")
