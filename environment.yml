@@ -6,5 +6,6 @@ dependencies:
         - pandas
         - python-twitter
         - feedparser
+        - colorama
         
 
