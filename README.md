@@ -2,7 +2,7 @@
 
 [![Build Status](https://api.travis-ci.org/jsta/limnojobs.png)](https://travis-ci.org/jsta/limnojobs) [![Feed Status](https://img.shields.io/badge/feed%20status-good-green.svg)](https://jsta.github.io/limnojobs)
 
-Code to monitor [email listservs](limnojobs/listservs.csv), [RSS feeds](limnojobs/rss.csv), [Community job boards](limnojobs/boards.csv) and [tweet](https://twitter.com/limno_jobs) new jobs.
+Code to monitor [email listservs](limnojobs/listservs.csv), [RSS feeds](limnojobs/rss.csv), [job boards](limnojobs/boards.csv) and [tweet](https://twitter.com/limno_jobs) new jobs.
 
 ## Scope
 
