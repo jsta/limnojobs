@@ -8,6 +8,7 @@ import pkg_resources
 # import base64
 # import html2text
 # import mailparser
+from utils import filter_limno
 
 try:
     import config
@@ -38,10 +39,21 @@ def pull_msg_content(msg_raw):
     subject = re_subject.findall(msg_raw.get_payload())
 
     re_body = re.compile('(?<=Content-Type: text\\/plain; charset="us-ascii"\\\\r\\\\nContent-Transfer-Encoding: quoted-printable).*?(?=Manage your Group settings)')
-    body = re_body.findall(msg_raw.get_payload())    
+    body = re_body.findall(msg_raw.get_payload())
     if len(body) == 0:        
         re_body = re.compile('(?<=Content-Type: text\\/plain; charset="iso-8859-1"\\\\r\\\\nContent-Transfer-Encoding: ).*?(?=Manage your Group settings)')
         body = re_body.findall(msg_raw.get_payload())
+    if len(body) == 0:
+        re_body = re.compile('(?<=Content-Type: text\\/plain; charset="UTF-8"\\\\r\\\\nContent-Transfer-Encoding: quoted-printable).*?(?=Manage your Group settings)')
+        body = re_body.findall(msg_raw.get_payload())
+    if len(body) == 0:
+        re_body = re.compile('(?<=Content-Type: text\\/plain; charset="utf-8"\\\\r\\\\nContent-Transfer-Encoding: quoted-printable).*?(?=Manage your Group settings)')
+        body = re_body.findall(msg_raw.get_payload())
+    if len(body) == 0:
+        re_body = re.compile('(?<=Content-Type: text\\/plain; charset="UTF-8"\\\\r\\\\nContent-Transfer-Encoding: ).*?(?=Manage your Group settings)')
+        body = re_body.findall(msg_raw.get_payload())
+    if len(body) == 0:
+        body = "error"
 
     body = [x.replace("\\r\\n","") for x in body]
     body = [x.replace("~","") for x in body]
@@ -58,7 +70,8 @@ def pull_ecolog():
     body_list = []
 
     for id in msg_ids:
-        # id = msg_ids[1]
+        # id = msg_ids[24]
+        # np.where(np.array(msg_ids) == 33)
         print(id)
         msg_raw = pull_msg(id)
         msg_subject, msg_body = pull_msg_content(msg_raw)
