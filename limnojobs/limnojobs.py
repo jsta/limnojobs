@@ -4,6 +4,7 @@ import sys
 import inspect
 from colorama import Fore
 import twitter
+import config
 
 currentdir = os.path.dirname(
     os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -36,26 +37,27 @@ subjects[subjects.str.len() > 159] = \
     subjects[subjects.str.len() > 159]. \
     str.slice(0, 159) + "..."
 for subject in subjects:
-    # print(Fore.GREEN + subject)
-    print(subject)
+    print(Fore.GREEN + subject)
+    # print(subject)
     print()
 
 if(tweet is True or interactive is True):
-    api = twitter.Api(consumer_key=config.consumer_key,
-                      consumer_secret=config.consumer_secret,
+    api = twitter.Api(consumer_key=config.api_key,
+                      consumer_secret=config.api_secret_key,
                       access_token_key = config.access_token_key,
                       access_token_secret=config.access_token_secret)
+    # api.VerifyCredentials()
 
-                      subjects = subjects.sample(frac = 1)  # randomize subjects order
-            for subject in subjects:
-                print(subject)
-                if(interactive is True):
-                    post_subject = input("post limnojob (y)/n/i? ") or "y"
-                    if(post_subject in ["y"]):
-                        status = api.PostUpdate(subject)
-                        posted = "y"
-                    if(post_subject in ["i"]):
-                        posted = "i"
+    subjects = subjects.sample(frac = 1)  # randomize subjects order
+    for subject in subjects:
+        print(subject)
+        if(interactive is True):
+            post_subject = input("post limnojob (y)/n/i? ") or "y"
+            if(post_subject in ["y"]):
+                status = api.PostUpdate(subject)
+                posted = "y"
+            if(post_subject in ["i"]):
+                posted = "i"
 
                     if(post_subject in ["y", "i"]):
                         # write to log
