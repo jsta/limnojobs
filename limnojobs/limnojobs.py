@@ -22,23 +22,21 @@ jobs_ecolog = pull_ecolog()
 # jobs_rss = pull_rss()
 # jobs_boards = pull_boards()
 
-## append/concat data sources
-res = jobs_ecolog
+## TODO: append/concat data sources
+jobs_all = jobs_ecolog
 
 ## test against log
 log = pd.read_csv("../log.csv")
-res = res[~res['subject'].isin(log['subject'])][['subject']]
+res = jobs_all[~jobs_all['subject'].isin(log['subject'])]# [['subject']]
 
 ## print/offer tweets
 print(Fore.GREEN + "Filtered: ")
 print()
-subjects = res['subject'].copy()
-subjects[subjects.str.len() > 159] = \
-    subjects[subjects.str.len() > 159]. \
-    str.slice(0, 159) + "..."
-for subject in subjects:
-    print(Fore.GREEN + subject)
-    # print(subject)
+jobs = res['subject'] + ". " + res['source'] + ". " + res['url']
+
+for jobs in jobs:
+    # job = jobs.iloc[0]
+    print(Fore.GREEN + job)
     print()
 
 if(tweet is True or interactive is True):
@@ -48,29 +46,37 @@ if(tweet is True or interactive is True):
                       access_token_secret=config.access_token_secret)
     # api.VerifyCredentials()
 
-    subjects = subjects.sample(frac = 1)  # randomize subjects order
-    for subject in subjects:
-        print(subject)
+    jobs = jobs.sample(frac = 1)  # randomize jobs order
+    # TODO: iterate through the 'index' of jobs rather than jobs themselves
+    #           this is to produce the log of both subject and body below
+
+    for job in jobs:
+        # job = jobs.iloc[0]
+        print(job)
         if(interactive is True):
-            post_subject = input("post limnojob (y)/n/i? ") or "y"
-            if(post_subject in ["y"]):
-                status = api.PostUpdate(subject)
+            post_job = input("post limnojob (y)/n/i? ") or "y"
+            if(post_job in ["y"]):
+                status = api.PostUpdate(job)
                 posted = "y"
-            if(post_subject in ["i"]):
+            if(post_job in ["i"]):
                 posted = "i"
 
                     if(post_subject in ["y", "i"]):
                         # write to log
-                        log = pd.read_csv("log.csv")
-                        # keys = ["title", "dc_source", "prism_url", "posted",
-                        #         "date"]
+                        log = pd.read_csv("../log.csv")
+                        keys = ["source", "date", "flag", "subject",
+                                "body"]
 
                         # subject = "title? journal. url"
                         # subject = "Annual 30-meter Dataset for  Glacial Lakes in High Mountain  Asia from 2008 to 2017. Earth System Science Data. https://doi.org/10.5194/essd-2020-57"
-                        # posted = "y"                        
+                        # posted = "y"
+                        source = job['source']
                         date = str(datetime.date.today())
-                        d = dict(zip(keys, [title, dc_source, prism_url,
-                                            posted, date]))
+                        subject = job['subject']
+                        body = job['body']
+                        d = dict(zip(keys, [source, date, posted,
+                                            subject, body]))
+
                         d = pd.DataFrame.from_records(d, index=[0])
                         log = log.append(pd.DataFrame(data = d),
                                          ignore_index = True)
