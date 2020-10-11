@@ -7,14 +7,12 @@ import twitter
 import config
 import datetime
 import argparse
+import ecolog
 
 currentdir = os.path.dirname(
     os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-
-from limnojobs import pull_ecolog
-from limnojobs import filter_limno
 
 def limnotoots(tweet, interactive, to_csv = False, browser = False):
     r"""Filter limnology themed papers from a pandas DataFrame.
@@ -24,7 +22,7 @@ def limnotoots(tweet, interactive, to_csv = False, browser = False):
     :param browser: boolean. Open limnopapers in browser tabs.
     """
 
-    jobs_ecolog = pull_ecolog()
+    jobs_ecolog = ecolog.pull_ecolog()
     # jobs_rss = pull_rss()
     # jobs_boards = pull_boards()
 
@@ -55,6 +53,7 @@ def limnotoots(tweet, interactive, to_csv = False, browser = False):
         for i in range(len(res)):
             # i = 0            
             job = jobs.iloc[i]
+            print(job)
             if(interactive is True):
                 post_job = input("post limnojob (y)/n/i? ") or "y"
                 if(post_job in ["y"]):
@@ -63,7 +62,7 @@ def limnotoots(tweet, interactive, to_csv = False, browser = False):
                 if(post_job in ["i"]):
                     posted = "i"
 
-                if(post_subject in ["y", "i"]):
+                if(post_job in ["y", "i"]):
                     # write to log                
                     keys = ["source", "date", "flag", "subject", "body"]
                     source = res.iloc[i]['source']

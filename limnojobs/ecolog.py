@@ -8,7 +8,8 @@ import pkg_resources
 # import base64
 # import html2text
 # import mailparser
-from limnojobs import filter_limno
+# from utils import filter_limno
+import utils
 
 try:
     import config
@@ -81,8 +82,8 @@ def pull_ecolog():
         subject_list.append(msg_subject[0])
         body_list.append(msg_body[0])
 
-    res = pd.DataFrame({'subject': subject_list, 'body': body_list})
-    res = filter_limno(res)
+    res = pd.DataFrame({'subject': subject_list, 'body': body_list})    
+    res = utils.filter_limno(res)    
     res['source'] = "ECOLOG-L"
     res['url'] = ''
 

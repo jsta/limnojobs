@@ -7,11 +7,13 @@ def filter_limno(df):
     """
 
     keywords = pd.read_csv(pkg_resources.resource_filename('limnojobs',
-                                                           'keywords.csv'))
+                                                           'keywords.csv'))    
     filter_for = keywords['filter_for'].tolist()
     filter_for = [x for x in filter_for if str(x) != 'nan']
+    filter_for = [x for x in filter_for if str(x) != ' ']
     filter_against = keywords['filter_against'].tolist()
     filter_against = [x for x in filter_against if str(x) != 'nan']
+    filter_against = [x for x in filter_against if str(x) != ' ']
 
     # df = res
     df = df.reset_index()
