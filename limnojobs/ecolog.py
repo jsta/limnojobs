@@ -8,7 +8,7 @@ import pkg_resources
 # import base64
 # import html2text
 # import mailparser
-from utils import filter_limno
+from limnojobs import filter_limno
 
 try:
     import config
@@ -36,7 +36,8 @@ def pull_msg(id):
 
 def pull_msg_content(msg_raw):
     re_subject = re.compile('(?<=Subject: \[ECOLOG-L\] ).*(?=List-Subscribe)')
-    subject = re_subject.findall(msg_raw.get_payload())    
+    subject = re_subject.findall(msg_raw.get_payload())
+    subject = [x.replace("\\r\\n","") for x in subject]
 
     re_body = re.compile('(?<=Content-Type: text\\/plain; charset="us-ascii"\\\\r\\\\nContent-Transfer-Encoding: quoted-printable).*?(?=Manage your Group settings)')
     body = re_body.findall(msg_raw.get_payload())
@@ -75,6 +76,7 @@ def pull_ecolog():
         print(id)
         msg_raw = pull_msg(id)
         msg_subject, msg_body = pull_msg_content(msg_raw)
+        # TODO: remove entries from gmail
 
         subject_list.append(msg_subject[0])
         body_list.append(msg_body[0])
