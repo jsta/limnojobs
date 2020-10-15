@@ -26,7 +26,8 @@ con.select('Inbox')
 
 def query_msg_ids(subject_tag):
     # subject_tag = "ECOLOG"
-    typ, data = con.search(None, 'SUBJECT ' + subject_tag)
+    # typ, data = con.search(None, 'SUBJECT ' + subject_tag)
+    typ, data = con.search(None, '(SUBJECT "' + subject_tag, '"' + ' UNSEEN)')
     msg_ids = [int(x) for x in data[0].split()]
     return msg_ids
 
