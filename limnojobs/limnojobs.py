@@ -8,6 +8,7 @@ import config
 import datetime
 import argparse
 import ecolog
+import sheets
 
 currentdir = os.path.dirname(
     os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -23,11 +24,13 @@ def limnotoots(tweet, interactive, to_csv = False, browser = False):
     """
 
     jobs_ecolog = ecolog.pull_ecolog()
+    jobs_ecoevo = sheets.pull_ecoevo()
     # jobs_rss = pull_rss()
     # jobs_boards = pull_boards()
 
     ## TODO: append/concat data sources
-    jobs_all = jobs_ecolog
+    jobs_all = pd.concat([jobs_ecolog, jobs_ecoevo])
+    # jobs_all = jobs_ecolog
 
     ## test against log
     log = pd.read_csv("log.csv")
