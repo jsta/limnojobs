@@ -83,9 +83,10 @@ def pull_ecolog():
         subject_list.append(msg_subject[0])
         body_list.append(msg_body[0])
 
-    res = pd.DataFrame({'subject': subject_list, 'body': body_list})    
-    res = utils.filter_limno(res)    
-    res['source'] = "ECOLOG-L"
-    res['url'] = ''
+    res = pd.DataFrame({'subject': subject_list, 'body': body_list})
+    res['subject'] = res['subject'] + ' | ' + \
+        'https://www.esa.org/membership/ecolog/' + ' | ' + '[ECOLOG-L]'    
+
+    res = utils.filter_limno(res)
 
     return res
