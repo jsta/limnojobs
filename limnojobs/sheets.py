@@ -39,7 +39,8 @@ def pull_ecoevo():
 
     res = pd.DataFrame({
         "subject": subject,
-        "body": body
+        "body": body,
+        "source": dt['source']
     })
 
     res = utils.filter_limno(res)

@@ -5,10 +5,6 @@ import imaplib
 import re
 import pandas as pd
 import pkg_resources
-# import base64
-# import html2text
-# import mailparser
-# from utils import filter_limno
 import utils
 
 try:
@@ -24,10 +20,12 @@ con.login(config.user_name, config.password)
 # calling function to check for email under this label 
 con.select('Inbox')
 
-def query_msg_ids(subject_tag):
+def query_msg_ids(subject_tag, unseen = True):
     # subject_tag = "ECOLOG"
-    # typ, data = con.search(None, 'SUBJECT ' + subject_tag)
-    typ, data = con.search(None, '(SUBJECT "' + subject_tag, '"' + ' UNSEEN)')
+    if unseen == False:
+        typ, data = con.search(None, 'SUBJECT ' + subject_tag)
+    else:
+        typ, data = con.search(None, '(SUBJECT "' + subject_tag, '"' + ' UNSEEN)')
     msg_ids = [int(x) for x in data[0].split()]
     return msg_ids
 
@@ -68,6 +66,8 @@ def pull_msg_content(msg_raw):
 def pull_ecolog():
     subject_tag = "ECOLOG"
     msg_ids = query_msg_ids(subject_tag)
+    # msg_ids = query_msg_ids(subject_tag, unseen = False)
+    # msg_ids = msg_ids[10:20]
 
     subject_list = []
     body_list = []
@@ -77,16 +77,17 @@ def pull_ecolog():
         # np.where(np.array(msg_ids) == 33)
         print(id)
         msg_raw = pull_msg(id)
-        msg_subject, msg_body = pull_msg_content(msg_raw)
-        # TODO: remove entries from gmail
+        msg_subject, msg_body = pull_msg_content(msg_raw)        
 
         subject_list.append(msg_subject[0])
         body_list.append(msg_body[0])
 
     res = pd.DataFrame({'subject': subject_list, 'body': body_list})
+    res['source'] = '[ECOLOG]'
     res['subject'] = res['subject'] + ' | ' + \
-        'https://www.esa.org/membership/ecolog/' + ' | ' + '[ECOLOG-L]'    
+        'https://www.esa.org/membership/ecolog/' + ' | ' + res['source']
 
-    res = utils.filter_limno(res)
+    if len(res) > 0:
+        res = utils.filter_limno(res)
 
     return res

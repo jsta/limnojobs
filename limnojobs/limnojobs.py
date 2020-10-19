@@ -38,7 +38,7 @@ def limnotoots(tweet, interactive, to_csv = False, browser = False):
     res = res.sample(frac = 1)  # randomize jobs order
 
     ## print/offer tweets
-    jobs = res['subject'] + ". " + res['source'] + ". " + res['url']
+    jobs = res['subject']
     print(Fore.GREEN + "Filtered: ")
     print()
     for job in jobs:
