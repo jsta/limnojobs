@@ -38,10 +38,11 @@ def pull_msg_content(msg_raw):
     re_subject = re.compile('(?<=Subject: \[ECOLOG-L\] ).*(?=List-Subscribe)')
     subject = re_subject.findall(msg_raw.get_payload())
     subject = [x.replace("\\r\\n","") for x in subject]
+    print(subject)
 
     re_body = re.compile('(?<=Content-Type: text\\/plain; charset="us-ascii"\\\\r\\\\nContent-Transfer-Encoding: quoted-printable).*?(?=Manage your Group settings)')
     body = re_body.findall(msg_raw.get_payload())
-    if len(body) == 0:        
+    if len(body) == 0:
         re_body = re.compile('(?<=Content-Type: text\\/plain; charset="iso-8859-1"\\\\r\\\\nContent-Transfer-Encoding: ).*?(?=Manage your Group settings)')
         body = re_body.findall(msg_raw.get_payload())
     if len(body) == 0:
@@ -60,8 +61,14 @@ def pull_msg_content(msg_raw):
     body = [x.replace("~","") for x in body]
     body = [x.replace("=","") for x in body]
     body = [x.replace("--","") for x in body]
+    
+    url = re.findall(r'(https?://\S+)', body[0])
+    if len(url) == 0:
+        url = "https://www.esa.org/membership/ecolog/"
+    else:
+        url = url[0]
 
-    return [subject, body]
+    return [subject, body, url]
 
 def pull_ecolog():
     subject_tag = "ECOLOG"
@@ -71,21 +78,23 @@ def pull_ecolog():
 
     subject_list = []
     body_list = []
+    url_list = []
 
     for id in msg_ids:
-        # id = msg_ids[24]
+        # id = msg_ids[5]
         # np.where(np.array(msg_ids) == 33)
         print(id)
         msg_raw = pull_msg(id)
-        msg_subject, msg_body = pull_msg_content(msg_raw)        
+        msg_subject, msg_body, msg_url = pull_msg_content(msg_raw)        
 
         subject_list.append(msg_subject[0])
         body_list.append(msg_body[0])
+        url_list.append(msg_url[0])
 
-    res = pd.DataFrame({'subject': subject_list, 'body': body_list})
+    res = pd.DataFrame({'subject': subject_list, 'body': body_list, 'url': url_list})
     res['source'] = '[ECOLOG]'
     res['subject'] = res['subject'] + ' | ' + \
-        'https://www.esa.org/membership/ecolog/' + ' | ' + res['source']
+        res['url'] + ' | ' + res['source']
 
     if len(res) > 0:
         res = utils.filter_limno(res)
