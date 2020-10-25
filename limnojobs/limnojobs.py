@@ -26,11 +26,11 @@ def limnotoots(tweet, interactive, to_csv = False, browser = False):
     jobs_ecolog = ecolog.pull_ecolog()
     jobs_ecoevo = sheets.pull_ecoevo()
     jobs_earthenvscience = sheets.pull_earthenvscience()
-    # jobs_rss = pull_rss()
+    jobs_rss = pull_rss()
     # jobs_boards = pull_boards()
 
     ## TODO: append/concat data sources
-    jobs_all = pd.concat([jobs_ecolog, jobs_ecoevo, jobs_earthenvscience])
+    jobs_all = pd.concat([jobs_ecolog, jobs_ecoevo, jobs_earthenvscience, jobs_rss])
     # jobs_all = jobs_ecolog
 
     ## test against log
