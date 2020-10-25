@@ -9,6 +9,7 @@ import datetime
 import argparse
 import ecolog
 import sheets
+import rss
 
 currentdir = os.path.dirname(
     os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -26,7 +27,7 @@ def limnotoots(tweet, interactive, to_csv = False, browser = False):
     jobs_ecolog = ecolog.pull_ecolog()
     jobs_ecoevo = sheets.pull_ecoevo()
     jobs_earthenvscience = sheets.pull_earthenvscience()
-    jobs_rss = pull_rss()
+    jobs_rss = rss.pull_rss()
     # jobs_boards = pull_boards()
 
     ## TODO: append/concat data sources
