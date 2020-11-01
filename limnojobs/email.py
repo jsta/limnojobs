@@ -38,7 +38,7 @@ def pull_msg_content(msg_raw):
     re_subject = re.compile('(?<=Subject: \[ECOLOG-L\] ).*(?=List-Subscribe)')
     subject = re_subject.findall(msg_raw.get_payload())
     subject = [x.replace("\\r\\n","") for x in subject]
-    print(subject)
+    # print(subject)
 
     re_body = re.compile('(?<=Content-Type: text\\/plain; charset="us-ascii"\\\\r\\\\nContent-Transfer-Encoding: quoted-printable).*?(?=Manage your Group settings)')
     body = re_body.findall(msg_raw.get_payload())
@@ -89,7 +89,7 @@ def pull_ecolog():
 
         subject_list.append(msg_subject[0])
         body_list.append(msg_body[0])
-        url_list.append(msg_url[0])
+        url_list.append(msg_url)
 
     res = pd.DataFrame({'subject': subject_list, 'body': body_list, 'url': url_list})
     res['source'] = '[ECOLOG]'
