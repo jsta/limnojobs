@@ -5,7 +5,8 @@ import imaplib
 import re
 import pandas as pd
 import pkg_resources
-import utils
+
+import limnojobs.utils
 
 try:
     import config

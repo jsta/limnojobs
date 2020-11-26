@@ -7,21 +7,20 @@ import twitter
 import config
 import datetime
 import argparse
-import listservs
-import sheets
-import rss
+
+import limnojobs.listservs
+import limnojobs.sheets
+import limnojobs.rss
 
 currentdir = os.path.dirname(
     os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
-def limnotoots(tweet, interactive, to_csv = False, browser = False):
+def limnotoots(tweet, interactive):
     r"""Filter limnology themed papers from a pandas DataFrame.
-    :param tweet: boolean. Post tweets of limnopapers
-    :param interactive: boolean. Ask for approval before tweeting.
-    :param to_csv: boolean. Save output to csv for debugging.
-    :param browser: boolean. Open limnopapers in browser tabs.
+    :param tweet: boolean. Post tweets of limnojobs
+    :param interactive: boolean. Ask for approval before tweeting.    
     """
 
     jobs_ecolog = listservs.pull_ecolog()
@@ -101,15 +100,10 @@ def main():
     parser.add_argument('--tweet', default = False,
                         action='store_true')
     parser.add_argument('--interactive', default = False,
-                        action='store_true')
-    parser.add_argument('--browser', default = False,
-                        action='store_true')
-    parser.add_argument('--debug', default = False,
-                        action='store_true')
+                        action='store_true')        
     args = parser.parse_args()
 
-    limnotoots(tweet = args.tweet, interactive = args.interactive,
-               browser = args.browser, to_csv = args.debug)
+    limnotoots(tweet = args.tweet, interactive = args.interactive)
 
 
 if __name__ == "__main__":

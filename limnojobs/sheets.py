@@ -1,7 +1,8 @@
 import gspread
 import pandas as pd
-import utils
 import datetime
+
+import limnojobs.utils
 
 gc = gspread.service_account()
 
