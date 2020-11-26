@@ -79,9 +79,9 @@ def pull_msg_content_ecolog(msg_raw):
 
     return [subject, body, url]
 
-def pull_ecolog():
+def pull_ecolog(unseen = True):
     subject_tag = "ECOLOG"
-    msg_ids = query_msg_ids(subject_tag = subject_tag)
+    msg_ids = query_msg_ids(subject_tag = subject_tag, unseen = unseen)
     # msg_ids = query_msg_ids(subject_tag, unseen = False)
     # msg_ids = msg_ids[10:20]
 

@@ -8,6 +8,7 @@ import config
 import datetime
 import argparse
 
+# execute from limnojobs/limnojobs
 import listservs
 import sheets
 import rss
@@ -17,13 +18,14 @@ currentdir = os.path.dirname(
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
-def limnotoots(tweet, interactive):
+def limnotoots(tweet = False, interactive = False, unseen = True):
     r"""Filter limnology themed papers from a pandas DataFrame.
     :param tweet: boolean. Post tweets of limnojobs
     :param interactive: boolean. Ask for approval before tweeting.    
+    :param unseen: boolean. Limit listserv queries to only unseen messages
     """
 
-    jobs_ecolog = listservs.pull_ecolog()
+    jobs_ecolog = listservs.pull_ecolog(unseen = unseen)
     jobs_ecoevo = sheets.pull_ecoevo()
     jobs_earthenvscience = sheets.pull_earthenvscience()
     jobs_rss = rss.pull_rss()
@@ -100,10 +102,12 @@ def main():
     parser.add_argument('--tweet', default = False,
                         action='store_true')
     parser.add_argument('--interactive', default = False,
-                        action='store_true')        
+                        action='store_true')
+    parser.add_argument('--unseen', default = True,
+                        action='store_false')
     args = parser.parse_args()
 
-    limnotoots(tweet = args.tweet, interactive = args.interactive)
+    limnotoots(tweet = args.tweet, interactive = args.interactive, unseen = args.unseen)
 
 
 if __name__ == "__main__":
