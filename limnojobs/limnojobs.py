@@ -7,7 +7,7 @@ import twitter
 import config
 import datetime
 import argparse
-import email
+import listservs
 import sheets
 import rss
 
@@ -24,7 +24,7 @@ def limnotoots(tweet, interactive, to_csv = False, browser = False):
     :param browser: boolean. Open limnopapers in browser tabs.
     """
 
-    jobs_ecolog = email.pull_ecolog()
+    jobs_ecolog = listservs.pull_ecolog()
     jobs_ecoevo = sheets.pull_ecoevo()
     jobs_earthenvscience = sheets.pull_earthenvscience()
     jobs_rss = rss.pull_rss()
