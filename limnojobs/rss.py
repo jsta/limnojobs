@@ -2,7 +2,7 @@ import pandas as pd
 import pkg_resources
 import feedparser
 
-from limnojobs.utils import filter_limno
+from utils import filter_limno
 
 # https://stackoverflow.com/questions/45701053/get-feeds-from-feedparser-and-import-to-pandas-dataframe
 

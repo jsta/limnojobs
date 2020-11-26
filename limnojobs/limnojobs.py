@@ -8,9 +8,9 @@ import config
 import datetime
 import argparse
 
-import limnojobs.listservs
-import limnojobs.sheets
-import limnojobs.rss
+import listservs
+import sheets
+import rss
 
 currentdir = os.path.dirname(
     os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -29,7 +29,7 @@ def limnotoots(tweet, interactive):
     jobs_rss = rss.pull_rss()
     # jobs_boards = pull_boards()
 
-    ## TODO: append/concat data sources
+    ## append/concat data sources
     jobs_all = pd.concat([jobs_ecolog, jobs_ecoevo, jobs_earthenvscience, jobs_rss])
     # jobs_all = jobs_ecolog
 

@@ -1,16 +1,15 @@
-#!/usr/bin/env python
+#!/usr/bin/bash
 # PYTHON_ARGCOMPLETE_OK
 
-import argparse
-import argcomplete
-from limnojobs import limnojobs as lj
+# import argparse
+# import argcomplete
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--tweet', default = False,
-                    action='store_true')
-parser.add_argument('--interactive', default = False,
-                    action='store_true')
-argcomplete.autocomplete(parser)
-args = parser.parse_args()
+# parser = argparse.ArgumentParser()
+# parser.add_argument('--tweet', default = False,
+#                     action='store_true')
+# parser.add_argument('--interactive', default = False,
+#                     action='store_true')
+# argcomplete.autocomplete(parser)
+# args = parser.parse_args()
 
-lj.limnotoots(tweet = args.tweet, interactive = args.interactive)
+python limnojobs/limnojobs.py --interactive
