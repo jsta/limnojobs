@@ -12,20 +12,23 @@ try:
 except:
     print("No gmail keys found")
     
-con = imaplib.IMAP4_SSL(config.imap_url, "993")
-  
-# logging the user in 
-con.login(config.user_name, config.password)
-  
-# calling function to check for email under this label 
+con = imaplib.IMAP4_SSL(config.imap_url, "993")  
+con.login(config.user_name, config.password)  
 con.select('Inbox')
 
-def query_msg_ids(subject_tag, unseen = True):
+def query_msg_ids(subject_tag = None, sender = None, unseen = True):
     # subject_tag = "ECOLOG"
-    if unseen == False:
-        typ, data = con.search(None, 'SUBJECT ' + subject_tag)
-    else:
-        typ, data = con.search(None, '(SUBJECT "' + subject_tag, '"' + ' UNSEEN)')
+    # sender = "noreply@findajob-mail.agu.org"
+    if sender is not None:
+        if unseen == False:
+            typ, data = con.search(None, 'FROM ' + sender)
+        else:
+            typ, data = con.search(None, '(FROM "' + sender, '"' + ' UNSEEN)')
+    else: # filtering by subject
+        if unseen == False:
+            typ, data = con.search(None, 'SUBJECT ' + subject_tag)
+        else:
+            typ, data = con.search(None, '(SUBJECT "' + subject_tag, '"' + ' UNSEEN)')
     msg_ids = [int(x) for x in data[0].split()]
     return msg_ids
 
@@ -34,7 +37,7 @@ def pull_msg(id):
     msg = email.message_from_string(str(data[0]))
     return msg
 
-def pull_msg_content(msg_raw):
+def pull_msg_content_ecolog(msg_raw):
     re_subject = re.compile('(?<=Subject: \[ECOLOG-L\] ).*(?=List-Subscribe)')
     subject = re_subject.findall(msg_raw.get_payload())
     subject = [x.replace("\\r\\n","") for x in subject]
@@ -72,7 +75,7 @@ def pull_msg_content(msg_raw):
 
 def pull_ecolog():
     subject_tag = "ECOLOG"
-    msg_ids = query_msg_ids(subject_tag)
+    msg_ids = query_msg_ids(subject_tag = subject_tag)
     # msg_ids = query_msg_ids(subject_tag, unseen = False)
     # msg_ids = msg_ids[10:20]
 
@@ -85,7 +88,7 @@ def pull_ecolog():
         # np.where(np.array(msg_ids) == 33)
         print(id)
         msg_raw = pull_msg(id)
-        msg_subject, msg_body, msg_url = pull_msg_content(msg_raw)        
+        msg_subject, msg_body, msg_url = pull_msg_content_ecolog(msg_raw)        
 
         subject_list.append(msg_subject[0])
         body_list.append(msg_body[0])
@@ -100,3 +103,19 @@ def pull_ecolog():
         res = utils.filter_limno(res)
 
     return res
+
+## agu
+# sender = "noreply@findajob-mail.agu.org"
+# msg_ids = query_msg_ids(sender = sender, unseen = False)
+# subject_list = []
+# body_list = []
+# url_list = []
+## for id in msg_ids:
+# id = msg_ids[1]
+# print(id)
+# msg_raw = pull_msg(id)
+# msg_subject, msg_body, msg_url = pull_msg_content_agu(msg_raw)        
+
+# subject_list.append(msg_subject[0])
+# body_list.append(msg_body[0])
+# url_list.append(msg_url)
