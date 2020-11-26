@@ -5,8 +5,9 @@ import imaplib
 import re
 import pandas as pd
 import pkg_resources
+import datetime
 
-import limnojobs.utils
+import utils
 
 try:
     import config
@@ -19,15 +20,19 @@ con.select('Inbox')
 
 def query_msg_ids(subject_tag = None, sender = None, unseen = True):
     # subject_tag = "ECOLOG"
+    # unseen = False
     # sender = "noreply@findajob-mail.agu.org"
+    two_weeks_ago = datetime.date.today() - datetime.timedelta(days = 14)
+    two_weeks_ago = two_weeks_ago.strftime("%d-%b-%Y")    
+
     if sender is not None:
         if unseen == False:
-            typ, data = con.search(None, 'FROM ' + sender)
+            typ, data = con.search(None, '(FROM ' + sender + ' SINCE "' + two_weeks_ago + '")')
         else:
             typ, data = con.search(None, '(FROM "' + sender, '"' + ' UNSEEN)')
     else: # filtering by subject
         if unseen == False:
-            typ, data = con.search(None, 'SUBJECT ' + subject_tag)
+            typ, data = con.search(None, '(SUBJECT ' + subject_tag + ' SINCE "' + two_weeks_ago + '")')
         else:
             typ, data = con.search(None, '(SUBJECT "' + subject_tag, '"' + ' UNSEEN)')
     msg_ids = [int(x) for x in data[0].split()]
@@ -61,7 +66,7 @@ def pull_msg_content_ecolog(msg_raw):
     if len(body) == 0:
         body = "error"
 
-    body = [x.replace("\\r\\n","") for x in body]
+    body = [x.replace("\\r\\n"," ") for x in body]
     body = [x.replace("~","") for x in body]
     body = [x.replace("=","") for x in body]
     body = [x.replace("--","") for x in body]
@@ -85,7 +90,7 @@ def pull_ecolog():
     url_list = []
 
     for id in msg_ids:
-        # id = msg_ids[5]
+        # id = msg_ids[1]
         # np.where(np.array(msg_ids) == 33)
         print(id)
         msg_raw = pull_msg(id)
