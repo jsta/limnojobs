@@ -49,3 +49,9 @@ def filter_limno(df):
 
     return df[not_junk]# ,
             #"filter_against": filter_against}
+
+def get_maxlength_tuple(x):
+    # x = test
+    tuple_length = [len(y) for y in x]
+    return x[tuple_length.index(max(tuple_length))]
+    

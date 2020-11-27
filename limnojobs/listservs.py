@@ -6,6 +6,7 @@ import re
 import pandas as pd
 import pkg_resources
 import datetime
+import numpy as np
 
 import utils
 
@@ -69,13 +70,19 @@ def pull_msg_content_ecolog(msg_raw):
     body = [x.replace("\\r\\n"," ") for x in body]
     body = [x.replace("~","") for x in body]
     body = [x.replace("=","") for x in body]
-    body = [x.replace("--","") for x in body]
+    body = [x.replace("--","") for x in body]    
     
-    url = re.findall(r'(https?://\S+)', body[0])
-    if len(url) == 0:
+    # if id == 680:
+    #     breakpoint()
+    body_split = re.split(r'\s', body[0])
+    detect_url = lambda x: re.findall(r'((^\s.*\.edu(\/?)(\S+)?))|(((https?:\S+)))|(((www\.))\S+)', x)
+    urls = [*map(detect_url, body_split)]
+    
+    if not any([len(url) > 0 for url in urls]):
         url = "https://www.esa.org/membership/ecolog/"
-    else:
-        url = url[0]
+    else:        
+        urls = np.array([utils.get_maxlength_tuple(x[0]) if x != [] else x for x in urls])
+        url = urls[np.array([len(x) > 0 for x in urls])][0]
 
     return [subject, body, url]
 
@@ -89,9 +96,10 @@ def pull_ecolog(unseen = True):
     body_list = []
     url_list = []
 
+    global id
     for id in msg_ids:
         # id = msg_ids[1]
-        # np.where(np.array(msg_ids) == 33)
+        # np.where(np.array(msg_ids) == 33)        
         print(id)
         msg_raw = pull_msg(id)
         msg_subject, msg_body, msg_url = pull_msg_content_ecolog(msg_raw)        
@@ -99,7 +107,7 @@ def pull_ecolog(unseen = True):
         subject_list.append(msg_subject[0])
         body_list.append(msg_body[0])
         url_list.append(msg_url)
-
+    
     res = pd.DataFrame({'subject': subject_list, 'body': body_list, 'url': url_list})
     res['source'] = '[ECOLOG]'
     res['subject'] = res['subject'] + ' | ' + \
