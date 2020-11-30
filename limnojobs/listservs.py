@@ -23,17 +23,17 @@ def query_msg_ids(subject_tag = None, sender = None, unseen = True):
     # subject_tag = "ECOLOG"
     # unseen = False
     # sender = "noreply@findajob-mail.agu.org"
-    two_weeks_ago = datetime.date.today() - datetime.timedelta(days = 14)
-    two_weeks_ago = two_weeks_ago.strftime("%d-%b-%Y")    
+    prior_date = datetime.date.today() - datetime.timedelta(days = 7)
+    prior_date = prior_date.strftime("%d-%b-%Y")
 
     if sender is not None:
         if unseen == False:
-            typ, data = con.search(None, '(FROM ' + sender + ' SINCE "' + two_weeks_ago + '")')
+            typ, data = con.search(None, '(FROM ' + sender + ' SINCE "' + prior_date + '")')
         else:
             typ, data = con.search(None, '(FROM "' + sender, '"' + ' UNSEEN)')
     else: # filtering by subject
         if unseen == False:
-            typ, data = con.search(None, '(SUBJECT ' + subject_tag + ' SINCE "' + two_weeks_ago + '")')
+            typ, data = con.search(None, '(SUBJECT ' + subject_tag + ' SINCE "' + prior_date + '")')
         else:
             typ, data = con.search(None, '(SUBJECT "' + subject_tag, '"' + ' UNSEEN)')
     msg_ids = [int(x) for x in data[0].split()]
@@ -82,7 +82,8 @@ def pull_msg_content_ecolog(msg_raw):
         url = "https://www.esa.org/membership/ecolog/"
     else:        
         urls = np.array([utils.get_maxlength_tuple(x[0]) if x != [] else x for x in urls])
-        url = urls[np.array([len(x) > 0 for x in urls])][0]
+        url = urls[np.array([len(x) > 0 for x in urls])][0]        
+        url = "".join([x.replace(")","") for x in url])
 
     return [subject, body, url]
 
@@ -108,7 +109,7 @@ def pull_ecolog(unseen = True):
         body_list.append(msg_body[0])
         url_list.append(msg_url)
     
-    res = pd.DataFrame({'subject': subject_list, 'body': body_list, 'url': url_list})
+    res = pd.DataFrame({'subject': subject_list, 'body': body_list, 'url': url_list})        
     res['source'] = '[ECOLOG]'
     res['subject'] = res['subject'] + ' | ' + \
         res['url'] + ' | ' + res['source']
