@@ -6,3 +6,6 @@ run:
 
 debug:
 	python limnojobs/limnojobs.py --interactive --unseen
+
+test:
+	cd limnojobs && python -m pytest

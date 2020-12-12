@@ -48,7 +48,7 @@ def pull_msg_content_ecolog(msg_raw):
     re_subject = re.compile('(?<=Subject: \[ECOLOG-L\] ).*(?=List-Subscribe)')
     subject = re_subject.findall(msg_raw.get_payload())
     subject = [x.replace("\\r\\n","") for x in subject]
-    # print(subject)
+    print(subject)
 
     re_body = re.compile('(?<=Content-Type: text\\/plain; charset="us-ascii"\\\\r\\\\nContent-Transfer-Encoding: quoted-printable).*?(?=Manage your Group settings)')
     body = re_body.findall(msg_raw.get_payload())
@@ -65,25 +65,17 @@ def pull_msg_content_ecolog(msg_raw):
         re_body = re.compile('(?<=Content-Type: text\\/plain; charset="UTF-8"\\\\r\\\\nContent-Transfer-Encoding: ).*?(?=Manage your Group settings)')
         body = re_body.findall(msg_raw.get_payload())
     if len(body) == 0:
+        re_body = re.compile('(?<=Content-Type: text\\/plain; charset="Windows-1252"\\\\r\\\\nContent-Transfer-Encoding: ).*?(?=Manage your Group settings)')
+        body = re_body.findall(msg_raw.get_payload())
+    if len(body) == 0:
         body = "error"
 
-    body = [x.replace("\\r\\n"," ") for x in body]
-    body = [x.replace("~","") for x in body]
-    body = [x.replace("=","") for x in body]
-    body = [x.replace("--","") for x in body]    
-    
-    # if id == 680:
-    #     breakpoint()
-    body_split = re.split(r'\s', body[0])
-    detect_url = lambda x: re.findall(r'((^\s.*\.edu(\/?)(\S+)?))|(((https?:\S+)))|(((www\.))\S+)', x)
-    urls = [*map(detect_url, body_split)]
-    
-    if not any([len(url) > 0 for url in urls]):
-        url = "https://www.esa.org/membership/ecolog/"
-    else:        
-        urls = np.array([utils.get_maxlength_tuple(x[0]) if x != [] else x for x in urls])
-        url = urls[np.array([len(x) > 0 for x in urls])][0]        
-        url = "".join([x.replace(")","") for x in url])
+    url = utils.extract_url(body)
+
+    # some urls have an equal sign...
+    body = [x.replace("=","") for x in body]    
+    body = [x.replace("~","") for x in body]    
+    body = [x.replace("--","") for x in body]
 
     return [subject, body, url]
 
@@ -103,6 +95,8 @@ def pull_ecolog(unseen = True):
         # np.where(np.array(msg_ids) == 33)        
         print(id)
         msg_raw = pull_msg(id)
+        # if id == 959:
+        #     breakpoint()
         msg_subject, msg_body, msg_url = pull_msg_content_ecolog(msg_raw)        
 
         subject_list.append(msg_subject[0])

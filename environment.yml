@@ -8,6 +8,7 @@ dependencies:
         - feedparser
         - colorama
         - argcomplete
+        - pytest
         - pip
         - pip:
                 - gspread

@@ -1,5 +1,7 @@
 import pandas as pd
 import pkg_resources
+import re
+import numpy as np
 
 def filter_limno(df):
     r"""Filter limnology themed jobs from a pandas DataFrame.
@@ -54,4 +56,23 @@ def get_maxlength_tuple(x):
     # x = test
     tuple_length = [len(y) for y in x]
     return x[tuple_length.index(max(tuple_length))]
-    
+
+def extract_url(body_raw):
+    # breakpoint()
+    body = [x.replace("=\\r\\n","") for x in body_raw]
+    body = [x.replace("\\r\\n"," ") for x in body]
+    body_split = re.split(r'\s', body[0])
+    detect_url = lambda x: re.findall(r'((^\s.*\.edu(\/?)(\S+)?))|(((https?:\S+)))|(((www\.))\S+)', x)
+    urls = [*map(detect_url, body_split)]
+    if not any([len(url) > 0 for url in urls]):
+        url = "https://www.esa.org/membership/ecolog/"
+    else:        
+        urls = np.array([get_maxlength_tuple(x[0]) if x != [] else x for x in urls], dtype="object")
+        url = urls[np.array([len(x) > 0 for x in urls])][0]        
+        url = "".join([x.replace(")","") for x in url])
+        url = re.sub(r'\.$', '', url)
+        url = re.sub(r'\,$', '', url)
+        url = re.sub(r'\>$', '', url)
+
+    print(url)    
+    return url
