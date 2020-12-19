@@ -12,6 +12,7 @@ import argparse
 import listservs
 import sheets
 import rss
+import boards
 
 currentdir = os.path.dirname(
     os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -29,10 +30,11 @@ def limnotoots(tweet = False, interactive = False, unseen = True):
     jobs_ecoevo = sheets.pull_ecoevo()
     jobs_earthenvscience = sheets.pull_earthenvscience()
     jobs_rss = rss.pull_rss()
+    jobs_csdms = boards.pull_csdms()
     # jobs_boards = pull_boards()
 
     ## append/concat data sources
-    jobs_all = pd.concat([jobs_ecolog, jobs_ecoevo, jobs_earthenvscience, jobs_rss])
+    jobs_all = pd.concat([jobs_ecolog, jobs_ecoevo, jobs_earthenvscience, jobs_rss, jobs_csdms])
     # jobs_all = jobs_ecolog
 
     ## test against log
