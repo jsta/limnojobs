@@ -48,6 +48,8 @@ def pull_msg_content_ecolog(msg_raw):
     re_subject = re.compile('(?<=Subject: \[ECOLOG-L\] ).*(?=List-Subscribe)')
     subject = re_subject.findall(msg_raw.get_payload())
     subject = [x.replace("\\r\\n","") for x in subject]
+    if(len(subject) == 0):
+        subject = ["error"]
     print(subject)
 
     re_body = re.compile('(?<=Content-Type: text\\/plain; charset="us-ascii"\\\\r\\\\nContent-Transfer-Encoding: quoted-printable).*?(?=Manage your Group settings)')
@@ -80,6 +82,7 @@ def pull_msg_content_ecolog(msg_raw):
     return [subject, body, url]
 
 def pull_ecolog(unseen = True):
+    # unseen = False
     subject_tag = "ECOLOG"
     msg_ids = query_msg_ids(subject_tag = subject_tag, unseen = unseen)
     # msg_ids = query_msg_ids(subject_tag, unseen = False)
@@ -91,13 +94,13 @@ def pull_ecolog(unseen = True):
 
     global id
     for id in msg_ids:
-        # id = msg_ids[1]
+        # id = msg_ids[2]
         # np.where(np.array(msg_ids) == 33)        
         print(id)
         msg_raw = pull_msg(id)
         # if id == 959:
         #     breakpoint()
-        msg_subject, msg_body, msg_url = pull_msg_content_ecolog(msg_raw)        
+        msg_subject, msg_body, msg_url = pull_msg_content_ecolog(msg_raw)
 
         subject_list.append(msg_subject[0])
         body_list.append(msg_body[0])
