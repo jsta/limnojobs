@@ -22,10 +22,10 @@ def pull_csdms():
     body_list = []
     url_list = []
 
-    # TODO: pull only the first several csmds_urls bc we can assume function is run regularly
+    # TODO: pull only the first several csdms_urls bc we can assume function is run regularly
     for url in csdms_urls:
         # url = csdms_urls[2]
-        print(url)
+        # print(url)
 
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
