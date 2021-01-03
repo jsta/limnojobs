@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import re
 import pandas as pd
 
+# run the line below from limnojobs/limnojobs
 import utils
 
 def pull_csdms():
@@ -55,6 +56,42 @@ def pull_csdms():
         
     res = pd.DataFrame({'subject': subject_list, 'body': body_list, 'url': url_list})
     res['source'] = '[CSDMS]'
+    res['subject'] = res['subject'] + ' | ' + \
+        res['url'] + ' | ' + res['source']
+
+    if len(res) > 0:
+        res = utils.filter_limno(res)
+
+    return res
+
+# rse
+def pull_rse():
+    rse_baseurl = 'https://us-rse.org/jobs/'
+
+    response = requests.get(rse_baseurl)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    individual_pages = soup.findAll('a', attrs = {'target': '_blank'})
+
+    detect_rse_url = lambda x: re.findall(r'(?<=a href=").*(?=" target)', x)
+    rse_urls = [detect_rse_url(str(x))[0] for x in individual_pages]
+    url_list = rse_urls
+
+    detect_rse_subject = lambda x: re.findall(r'(?<=blank">).*(?=<\/a\>)', x)
+    subject_list = [detect_rse_subject(str(x))[0] for x in individual_pages]
+
+    body_list = []
+    for url in rse_urls:
+        # url = rse_urls[0]
+        # print(url)
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        msg_body = soup.find_all(['p', 'td'])
+        if len(msg_body) == 0:
+            msg_body = "error"
+        body_list.append(str(msg_body))
+        
+    res = pd.DataFrame({'subject': subject_list, 'body': body_list, 'url': url_list})
+    res['source'] = '[USRSE]'
     res['subject'] = res['subject'] + ' | ' + \
         res['url'] + ' | ' + res['source']
 
