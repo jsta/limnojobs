@@ -97,7 +97,9 @@ def pull_earthenvscience():
     dt = dt.applymap(lambda x:  ''.join(map(str, x)))
     dt['source'] = "[earthenvscience]"
 
-    # remove closing_date < today
+    # remove closing_date < today    
+    dt = dt.loc[dt['closing_date'].str.len() > 0]
+    dt = dt.loc[dt['closing_date'].str.len() < 15]
     dt['closing_date'] = pd.to_datetime(dt['closing_date'])
     dt = dt.loc[dt['closing_date'] >= pd.to_datetime(datetime.date.today())]
 
