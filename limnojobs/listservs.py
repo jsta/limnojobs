@@ -50,7 +50,7 @@ def pull_msg_content_ecolog(msg_raw):
     subject = [x.replace("\\r\\n","") for x in subject]
     if(len(subject) == 0):
         subject = ["error"]
-    print(subject)
+    # print(subject)
 
     re_body = re.compile('(?<=Content-Type: text\\/plain; charset="us-ascii"\\\\r\\\\nContent-Transfer-Encoding: quoted-printable).*?(?=Manage your Group settings)')
     body = re_body.findall(msg_raw.get_payload())
@@ -96,7 +96,7 @@ def pull_ecolog(unseen = True):
     for id in msg_ids:
         # id = msg_ids[2]
         # np.where(np.array(msg_ids) == 33)        
-        print(id)
+        # print(id)
         msg_raw = pull_msg(id)
         # if id == 959:
         #     breakpoint()

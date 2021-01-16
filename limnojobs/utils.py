@@ -74,5 +74,5 @@ def extract_url(body_raw):
         url = re.sub(r'\,$', '', url)
         url = re.sub(r'\>$', '', url)
 
-    print(url)    
+    # print(url)    
     return url
