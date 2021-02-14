@@ -42,7 +42,7 @@ def pull_ecoevo():
         "rank": dt_raw_postdoc['valueRanges'][0]['values'],
         "subject": dt_raw_postdoc['valueRanges'][1]['values'],
         "institution": dt_raw_postdoc['valueRanges'][2]['values'], 
-        "notes": dt_raw_postdoc['valueRanges'][3]['values'],
+        # "notes": dt_raw_postdoc['valueRanges'][3]['values'],
         "closing_date": dt_raw_postdoc['valueRanges'][4]['values'],
         "url": dt_raw_postdoc['valueRanges'][5]['values']
     })
@@ -68,7 +68,7 @@ def pull_ecoevo():
         "body": body,
         "source": dt['source']
     })
-
+    
     res = utils.filter_limno(res)
 
     return res
