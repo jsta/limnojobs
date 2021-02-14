@@ -22,9 +22,9 @@ def filter_limno(df):
     # df = df.iloc[0:2]
 
     has_limno_subject = df['subject'].str.contains('|'.join(filter_for),
-                                               case = False)
+                                               case = False, na = False)
     has_limno_body = df['body'].str.contains('|'.join(filter_for),
-                                                   case = False)
+                                                   case = False, na = False)
 
     # save matching filter_for here
     is_limno = pd.DataFrame([has_limno_subject, has_limno_body]) \
@@ -34,9 +34,9 @@ def filter_limno(df):
     df = df[is_limno]
 
     has_junk_subject = ~df['subject'].str.contains('|'.join(filter_against),
-                                                   case = False)
+                                                   case = False, na = False)
     has_junk_body = ~df['body'].str.contains('|'.join(filter_against),
-                                               case = False)
+                                               case = False, na = False)
 
     # save matching filter_against here
     # if len(df.index) > 0:
