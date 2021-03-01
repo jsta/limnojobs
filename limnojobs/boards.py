@@ -100,6 +100,43 @@ def pull_rse():
 
     return res
 
+# pangeo
+def pull_pangeo():
+    pangeo_baseurl = 'https://discourse.pangeo.io/c/news/jobs/14'
+
+    response = requests.get(pangeo_baseurl)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    individual_pages = soup.findAll('a', attrs = {'class': 'title raw-link raw-topic-link'})
+
+    detect_pangeo_url = lambda x: re.findall(r'(?<=href=").*(?=">)', x)
+    pangeo_urls = [detect_pangeo_url(str(x))[0] for x in individual_pages]
+    url_list = pangeo_urls[1:] # exclude the about page
+
+    detect_pangeo_subject = lambda x: re.findall(r'(?<=>).*(?=<\/a\>)', x)
+    pangeo_subjects = [detect_pangeo_subject(str(x))[0] for x in individual_pages]
+    subject_list = pangeo_subjects[1:]
+
+    body_list = []
+    for url in url_list:
+        # url = url_list[0]
+        # print(url)
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        msg_body = soup.find_all(['p', 'td'])
+        if len(msg_body) == 0:
+            msg_body = "error"
+        body_list.append(str(msg_body))
+    
+    res = pd.DataFrame({'subject': subject_list, 'body': body_list, 'url': url_list})
+    res['source'] = '[PANGEO]'
+    res['subject'] = res['subject'] + ' | ' + \
+        res['url'] + ' | ' + res['source']
+
+    if len(res) > 0:
+        res = utils.filter_limno(res)
+
+    return res
+
 
 # nalms
 
