@@ -9,6 +9,7 @@ dependencies:
         - colorama
         - argcomplete
         - pytest
+        - black
         - pip
         - pip:
                 - gspread
