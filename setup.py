@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="limnojobs",
     version="0.0.1",
-    author="Joseph Stachelek",
+    author="Jemma Stachelek",
     author_email="stachel2@msu.edu",
     description="A package to monitor science job feeds and tweet new \
                 limnology jobs",
