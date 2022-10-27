@@ -10,6 +10,7 @@ dependencies:
         - argcomplete
         - pytest
         - black
+        - beautifulsoup4
         - pip
         - pip:
                 - gspread
