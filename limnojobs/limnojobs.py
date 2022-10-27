@@ -34,21 +34,21 @@ def limnotoots(tweet=False, interactive=False, unseen=True):
     jobs_rss = rss.pull_rss()
     print_source("CSDMS")
     jobs_csdms = boards.pull_csdms()
-    print_source("USRSE")
-    jobs_rse = boards.pull_rse()
+    # print_source("USRSE")
+    # jobs_rse = boards.pull_rse()
     print_source("PANGEO")
     jobs_pangeo = boards.pull_pangeo()
     # print_source("ECOLOG")
     # jobs_ecolog = listservs.pull_ecolog(unseen = unseen)
-    print_source("ECOEVO")
-    jobs_ecoevo = sheets.pull_ecoevo()
-    print_source("EarthEnvScience")
-    jobs_earthenvscience = sheets.pull_earthenvscience()
+    # print_source("ECOEVO")
+    # jobs_ecoevo = sheets.pull_ecoevo()
+    # print_source("EarthEnvScience")
+    # jobs_earthenvscience = sheets.pull_earthenvscience()
     # jobs_boards = pull_boards()
 
     ## append/concat data sources
     jobs_all = pd.concat(
-        [jobs_ecoevo, jobs_earthenvscience, jobs_rss, jobs_csdms, jobs_rse, jobs_pangeo]
+        [jobs_rss, jobs_csdms, jobs_pangeo]
     )
     # jobs_all = jobs_ecolog
 
