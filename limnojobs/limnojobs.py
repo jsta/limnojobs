@@ -9,7 +9,7 @@ import datetime
 import argparse
 
 # execute from limnojobs/limnojobs
-import listservs
+# import listservs # turned off b/c gmail no longer allows scripted plain password login
 import sheets
 import rss
 import boards
@@ -38,8 +38,8 @@ def limnotoots(tweet = False, interactive = False, unseen = True):
     jobs_rse = boards.pull_rse()
     print_source("PANGEO")
     jobs_pangeo = boards.pull_pangeo()
-    print_source("ECOLOG")    
-    jobs_ecolog = listservs.pull_ecolog(unseen = unseen)
+    # print_source("ECOLOG")    
+    # jobs_ecolog = listservs.pull_ecolog(unseen = unseen)
     print_source("ECOEVO")
     jobs_ecoevo = sheets.pull_ecoevo()
     print_source("EarthEnvScience")
@@ -47,7 +47,7 @@ def limnotoots(tweet = False, interactive = False, unseen = True):
     # jobs_boards = pull_boards()
 
     ## append/concat data sources
-    jobs_all = pd.concat([jobs_ecolog, jobs_ecoevo, jobs_earthenvscience, jobs_rss, jobs_csdms, jobs_rse, jobs_pangeo])
+    jobs_all = pd.concat([jobs_ecoevo, jobs_earthenvscience, jobs_rss, jobs_csdms, jobs_rse, jobs_pangeo])
     # jobs_all = jobs_ecolog
 
     ## test against log
@@ -97,7 +97,7 @@ def limnotoots(tweet = False, interactive = False, unseen = True):
                     log = log.append(pd.DataFrame(data = d), ignore_index = True)
                     log.to_csv("log.csv", index = False)
             else:
-                status = api.PostUpdate(toot)
+                # status = api.PostUpdate(toot)
 
                 keys = ["source", "date", "flag", "subject", "body"]
                 source = res.iloc[i]['source']
