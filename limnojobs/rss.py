@@ -1,9 +1,12 @@
+import warnings
 import feedparser
 import pandas as pd
 import pkg_resources
 
 
 from utils import filter_limno
+
+warnings.simplefilter(action="ignore", category=FutureWarning)
 
 # https://stackoverflow.com/questions/45701053/get-feeds-from-feedparser-and-import-to-pandas-dataframe
 
