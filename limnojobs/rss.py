@@ -1,6 +1,7 @@
+import feedparser
 import pandas as pd
 import pkg_resources
-import feedparser
+
 
 from utils import filter_limno
 
@@ -22,28 +23,27 @@ def pull_feed(url, title):
         body_list.append(post.summary)
         url_list.append(post.link)
 
-    res = pd.DataFrame({'subject': subject_list, 'body': body_list, 'url': url_list})
+    res = pd.DataFrame({"subject": subject_list, "body": body_list, "url": url_list})
 
     return res
 
+
 #### pull_rss fxn
 def pull_rss():
-    rawrss = pd.read_csv(pkg_resources.resource_filename('limnojobs',
-                                                            'rss.csv'))
+    rawrss = pd.read_csv(pkg_resources.resource_filename("limnojobs", "rss.csv"))
     # sort rawrss by increasing journal name nchar length for pretty printing
-    rawrss.index = rawrss['title'].str.len()
-    rawrss = rawrss.sort_index().reset_index(drop = True)
+    rawrss.index = rawrss["title"].str.len()
+    rawrss = rawrss.sort_index().reset_index(drop=True)
 
     # iterate here
-    posts = pd.DataFrame(columns=['subject', 'body', 'url'])
+    posts = pd.DataFrame(columns=["subject", "body", "url"])
     for i in range(len(rawrss.index)):
         # i = 0
-        res_raw = pull_feed(rawrss['rawrss'][i], rawrss['title'][i])
+        res_raw = pull_feed(rawrss["rawrss"][i], rawrss["title"][i])
         res = filter_limno(res_raw).reset_index()
-        res['source'] = rawrss['title'][i]
+        res["source"] = rawrss["title"][i]
         posts = posts.append(res, ignore_index=True)
-    
-    posts['subject'] = posts['subject'] + ' | ' + \
-        posts['url'] + ' | ' + posts['source']
+
+    posts["subject"] = posts["subject"] + " | " + posts["url"] + " | " + posts["source"]
 
     return posts
