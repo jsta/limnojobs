@@ -4,6 +4,7 @@ import time
 from bs4 import BeautifulSoup
 import re
 import pandas as pd
+import itertools
 
 # run the line below from limnojobs/limnojobs
 import utils
@@ -71,13 +72,20 @@ def pull_rse():
     response = requests.get(rse_baseurl)
     soup = BeautifulSoup(response.text, 'html.parser')
     individual_pages = soup.findAll('a', attrs = {'target': '_blank'})
-
+    
     detect_rse_url = lambda x: re.findall(r'(?<=a href=").*(?=" target)', x)
-    rse_urls = [detect_rse_url(str(x))[0] for x in individual_pages]
+    rse_urls = [detect_rse_url(str(x)) for x in individual_pages]
+    has_url = [len(x) > 0 for x in rse_urls]
+    rse_urls = list(itertools.compress(rse_urls, has_url))
+    rse_urls = [x[0] for x in rse_urls]
+    
     url_list = rse_urls
 
     detect_rse_subject = lambda x: re.findall(r'(?<=blank">).*(?=<\/a\>)', x)
-    subject_list = [detect_rse_subject(str(x))[0] for x in individual_pages]
+    subject_list = [detect_rse_subject(str(x)) for x in individual_pages]
+    has_url = [len(x) > 0 for x in subject_list]
+    subject_list = list(itertools.compress(subject_list, has_url))
+    subject_list = [x[0] for x in subject_list]
 
     body_list = []
     for url in rse_urls:
