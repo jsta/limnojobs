@@ -10,7 +10,7 @@ import argparse
 
 # execute from limnojobs/limnojobs
 # import listservs # turned off b/c gmail no longer allows scripted plain password login
-import sheets
+# import sheets
 import rss
 import boards
 
