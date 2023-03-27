@@ -43,9 +43,11 @@ def pull_rss():
     for i in range(len(rawrss.index)):
         # i = 0
         res_raw = pull_feed(rawrss["rawrss"][i], rawrss["title"][i])
-        res = filter_limno(res_raw).reset_index()
-        res["source"] = rawrss["title"][i]
-        posts = posts.append(res, ignore_index=True)
+        if res_raw.shape[0] > 0:            
+            res = filter_limno(res_raw).reset_index()
+            if res is not None:
+                res["source"] = rawrss["title"][i]
+                posts = posts.append(res, ignore_index=True)
 
     posts["subject"] = posts["subject"] + " | " + posts["url"] + " | " + posts["source"]
 

@@ -21,6 +21,9 @@ def filter_limno(df):
     df = df.reset_index()
     # df = df.iloc[0:2]
 
+    if df.shape[0] == 0:
+        return None 
+
     has_limno_subject = df['subject'].str.contains('|'.join(filter_for),
                                                case = False, na = False)
     has_limno_body = df['body'].str.contains('|'.join(filter_for),
